@@ -2339,8 +2339,8 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   var SPEED = 480;
   kaboom_default();
   loadSprite("tv", "sprites/tv.png");
-  loadSound("dead", "sounds/dead.wav");
-  loadSound("static01", "sounds/tv-static-01.wav");
+  loadSound("dead", "sounds/die_sound.wav");
+  loadSound("static01", "sounds/tv_static.wav");
   var music = play("static01", {
     volume: 0.1,
     loop: true

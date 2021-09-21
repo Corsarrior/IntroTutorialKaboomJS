@@ -9,8 +9,8 @@ kaboom();
 
 // load assets
 loadSprite("tv", "sprites/tv.png");
-loadSound("dead", "sounds/dead.wav");
-loadSound("static01", "sounds/tv-static-01.wav");
+loadSound("dead", "sounds/die_sound.wav");
+loadSound("static01", "sounds/tv_static.wav");
 
  // bakground mousic 
     const music = play("static01", {
