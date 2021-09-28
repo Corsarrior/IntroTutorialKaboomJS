@@ -2341,9 +2341,32 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   loadSprite("tv", "sprites/tv.png");
   loadSound("dead", "sounds/die_sound.wav");
   loadSound("static01", "sounds/tv_static.wav");
+  var score;
   var music = play("static01", {
     volume: 0.1,
     loop: true
+  });
+  scene("intro", () => {
+    function addButton(txt, f) {
+      const btn = add([
+        text(txt, 8),
+        pos(center()),
+        area({ cursor: "pointer" }),
+        scale(1),
+        origin("center")
+      ]);
+      btn.clicks(f);
+      btn.hovers(() => {
+        const t = time() * 10;
+        btn.color = rgb(wave(0, 255, t), wave(0, 255, t + 2), wave(0, 255, t + 4));
+        btn.scale = vec2(1.2);
+      }, () => {
+        btn.scale = vec2(1);
+        btn.color = rgb();
+      });
+    }
+    __name(addButton, "addButton");
+    addButton("Start", () => go("game"));
   });
   scene("game", () => {
     gravity(2400);
@@ -2393,7 +2416,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       shake();
       addKaboom(tv.pos);
     });
-    let score = 0;
+    score = 0;
     const scoreLabel = add([
       text(score),
       pos(24, 24)
@@ -2417,9 +2440,15 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       pos(center()),
       origin("center")
     ]);
+    add([
+      text("Score: " + score),
+      pos(width() / 2, height() / 2 + 60),
+      scale(0.4),
+      origin("center")
+    ]);
     keyPress("space", () => go("game"));
     mouseClick(() => go("game"));
   });
-  go("game");
+  go("intro");
 })();
 //# sourceMappingURL=game.js.map

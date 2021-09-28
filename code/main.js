@@ -1,3 +1,4 @@
+// import kaboom lib
 import kaboom from "kaboom";
 
 const FLOOR_HEIGHT = 48;
@@ -12,11 +13,48 @@ loadSprite("tv", "sprites/tv.png");
 loadSound("dead", "sounds/die_sound.wav");
 loadSound("static01", "sounds/tv_static.wav");
 
+let score;
+
  // bakground mousic 
     const music = play("static01", {
     volume: 0.1,
     loop: true
     });
+
+scene("intro", () => {
+
+  function addButton(txt, f){
+    const btn = add([
+      text(txt, 8),
+      pos(center()),
+      area({cursor: "pointer", }),
+      scale(1),
+      origin("center"),
+    ]);
+
+    // clicks comes from area
+    // if btn receive a click, do f action
+    btn.clicks(f);
+
+    btn.hovers(() => {
+      const t = time() * 10;
+      btn.color = rgb(
+        wave(0, 255, t),
+			  wave(0, 255, t + 2),
+			  wave(0, 255, t + 4),
+      );
+      // Make a 2d vector.
+      btn.scale = vec2(1.2);
+      // What happen is not hover
+      }, () => {
+        btn.scale = vec2(1);
+		    btn.color = rgb();
+      }
+    );
+  }
+  addButton("Start", () => go("game"));
+
+})
 
 scene("game", () => {
   
@@ -75,14 +113,14 @@ scene("game", () => {
 
     spawnTree();
 
-    // collides comes from area component
+    // collides come from area component
     tv.collides("tree", () => {
       go("lose"); // go to "lose" scene
       shake();
       addKaboom(tv.pos); 
     });
 
-    let score = 0;
+    score = 0;
     const scoreLabel = add([
         text(score),
         pos(24, 24)
@@ -95,23 +133,6 @@ scene("game", () => {
     });
 }) 
 
-/*
-// the first argument is the time in seconds
-loop(1, () => {
-// add tree
-  const tree = add([
-      rect(48, rand(24, 64)) ,
-      area(),
-      outline(4),
-      pos(width(), height() - 48),
-      // origin change pos
-      origin("botleft"), 
-      color(255, 180, 255),
-      move(LEFT, 240),
-      "tree", // tag
-  ]); 
-})
-*/
 
 scene("lose", () => {
 
@@ -133,12 +154,19 @@ scene("lose", () => {
       origin("center"),
   ])
 
+  add([
+      text("Score: " + score),
+      pos(width() / 2, height() / 2 + 60),
+      scale(0.4),
+      origin("center"),
+  ])
+
   // go back to game with space is pressed
   keyPress("space", () => go("game"));
   mouseClick(() => go("game"));
 })
 
-go("game")
+go("intro");
 
 
 
